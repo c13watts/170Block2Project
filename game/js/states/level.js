@@ -21,8 +21,8 @@ level.prototype = {
 		this.player1.spawn(game,500,700,'player');
 		
 		//Dummy enemy
-		//this.dummy = new enemy();
-		//this.dummy.spawn(game,100,100,'player')
+		this.dummy = new enemy();
+		this.dummy.spawn(game,960,540,'player')
 		
 		//Enable controls
 		this.cursors = game.input.keyboard.createCursorKeys();
@@ -31,6 +31,8 @@ level.prototype = {
 	update: function()
 	{
 		this.player1.movement(this.cursors);
+		this.player1.attack(game,this.dummy);
+		game.debug.body(this.dummy.sprite);
 		//this.dummy.pathfind(this.player1.sprite);
 	},
 

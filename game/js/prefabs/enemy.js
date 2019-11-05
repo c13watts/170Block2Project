@@ -16,7 +16,7 @@ enemy.prototype = {
 	pathfind: function(player){
 		//Enemy pathfinding
 		//Only really works for one player atm. Needs to be improved for 2 players
-		if(player.x > this.sprite.x){
+		/*if(player.x > this.sprite.x){
 			this.sprite.x += this.movementspeed;
 		}else if (player.x < this.sprite.x){
 			this.sprite.x -= this.movementspeed;
@@ -25,6 +25,6 @@ enemy.prototype = {
 			this.sprite.y += this.movementspeed;
 		}else if (player.y < this.sprite.y){
 			this.sprite.y -= this.movementspeed;
-		}
+		}*/
 	}
 }
