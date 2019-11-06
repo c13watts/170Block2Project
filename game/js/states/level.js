@@ -1,8 +1,9 @@
-"use strict"
+//"use strict"
 var level = function(game)
 {
 	this.player1;
 	this.player2;
+	var pad1;
 };
 
 level.prototype = {
@@ -26,11 +27,15 @@ level.prototype = {
 		
 		//Enable controls
 		this.cursors = game.input.keyboard.createCursorKeys();
+		
+		//Gamepad controls (Experimental)
+		game.input.gamepad.start();
+		pad1 = game.input.gamepad.pad2;
 	},
 
 	update: function()
 	{
-		this.player1.movement(this.cursors);
+		this.player1.movement(this.cursors,pad1);
 		this.player1.attack(game,this.dummy);
 		game.debug.body(this.dummy.sprite);
 		//this.dummy.pathfind(this.player1.sprite);
@@ -39,5 +44,5 @@ level.prototype = {
 	shutdown: function()
 	{
 
-	}
+	}	
 }
