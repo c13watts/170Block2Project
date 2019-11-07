@@ -38,16 +38,17 @@ level.prototype = {
 						j: game.input.keyboard.addKey(Phaser.Keyboard.J)};
 		//Gamepad controls (Experimental)
 		game.input.gamepad.start();
-		pad1 = game.input.gamepad.pad2;
+		pad1 = game.input.gamepad.pad1;
+		pad2 = game.input.gamepad.pad2;
 	},
 
 	update: function() {
 		this.player1.movement(this.cursors,pad1);
 		this.player1.attack(game,this.dummy);
 
-		this.player2.movement(this.wasd);
+		this.player2.movement(this.wasd,pad2);
 		game.debug.body(this.dummy.sprite);
-		//this.dummy.pathfind(this.player1.sprite);
+		this.dummy.pathfind(this.player1.sprite);
 	},
 
 	shutdown: function() {

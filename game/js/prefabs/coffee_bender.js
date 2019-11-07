@@ -16,17 +16,17 @@ coffee_bender.prototype = {
 		this.sprite.body.collideWorldBounds = true;
 	},
 	//Controls (Wizard already uses up, down, left, right)
-	movement: function(wasd) {
-		if (wasd.w.isDown) {
+	movement: function(wasd, pad1) {
+		if (wasd.w.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_UP) || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) < -0.1) {
 			this.sprite.y -= this.movementSpeed;
-		} else if (wasd.s.isDown) {
+		} else if (wasd.s.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_DOWN) || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) > 0.1) {
 			this.sprite.y += this.movementSpeed;
 		}
 
-		if (wasd.a.isDown) {
+		if (wasd.a.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1) {
 			this.sprite.x -= this.movementSpeed;
 			this.sprite.frame = 1;
-		} else if (wasd.d.isDown) {
+		} else if (wasd.d.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT) || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) > 0.1) {
 			this.sprite.x += this.movementSpeed;
 			this.sprite.frame = 0;
 		}
