@@ -51,6 +51,7 @@ level.prototype = {
 		this.player2.attack(game, this.wasd, pad2);
 		game.debug.body(this.dummy.sprite);
 		this.dummy.pathfind(this.player1.sprite);
+		//game.physics.arcade.overlap(this.player1, this.player2.coffee);
 	},
 
 	shutdown: function() {

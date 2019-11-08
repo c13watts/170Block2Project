@@ -7,6 +7,7 @@ function coffee_bender() {
 	this.dir = "right";
 	this.melee;
 	this.coffee;
+	this.cooldown = false;
 }
 
 coffee_bender.prototype = {
@@ -22,6 +23,10 @@ coffee_bender.prototype = {
 		this.melee.body.setSize(100,100);
 		this.melee.anchor.setTo(0.5);
 		this.melee.kill();
+
+		this.coffee = game.add.group();
+		this.coffee.enableBody = true;
+		this.coffee.physicsBodyType = Phaser.Physics.ARCADE;
 	},
 	//Controls (Wizard already uses up, down, left, right)
 	movement: function(wasd, pad1) {
@@ -62,16 +67,22 @@ coffee_bender.prototype = {
 			this.melee.anchor.setTo(0.5);
 			game.debug.body(this.melee);
 		}
-		// drop a cup of coffee (special)
+		// drop a cup of coffee (special) 
+		// 60s cooldown
 		if (wasd.k.justPressed() || pad1.justPressed(Phaser.Gamepad.XBOX360_Y)) {
-			this.coffee = game.add.sprite(this.sprite.x, this.sprite.y, "null");
-			game.physics.arcade.enable(this.coffee);
-			this.coffee.body.setSize(50,50);
-			this.coffee.anchor.setTo(0.5);
+			if (!this.cooldown) {
+				this.cooldown = true;
+				this.coffee.create(this.sprite.x, this.sprite.y, "coffee");
+				game.time.events.add(Phaser.Timer.SECOND * 60, this.resetCooldown, this);
+			}
 		}
 	},
 
 	endMelee: function() {
 		this.melee.kill();
+	},
+
+	resetCooldown: function() {
+		this.cooldown = false;
 	}
 }
