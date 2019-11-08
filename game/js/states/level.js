@@ -35,7 +35,8 @@ level.prototype = {
 						a: game.input.keyboard.addKey(Phaser.Keyboard.A),
 						s: game.input.keyboard.addKey(Phaser.Keyboard.S),
 						d: game.input.keyboard.addKey(Phaser.Keyboard.D),
-						j: game.input.keyboard.addKey(Phaser.Keyboard.J)};
+						j: game.input.keyboard.addKey(Phaser.Keyboard.J),
+						k: game.input.keyboard.addKey(Phaser.Keyboard.K) };
 		//Gamepad controls (Experimental)
 		game.input.gamepad.start();
 		pad1 = game.input.gamepad.pad1;
@@ -47,6 +48,7 @@ level.prototype = {
 		this.player1.attack(game,this.dummy);
 
 		this.player2.movement(this.wasd,pad2);
+		this.player2.attack(game, this.wasd, pad2);
 		game.debug.body(this.dummy.sprite);
 		this.dummy.pathfind(this.player1.sprite);
 	},
