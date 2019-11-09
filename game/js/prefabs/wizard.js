@@ -212,7 +212,42 @@ wizard.prototype = {
 				game.time.events.add(Phaser.Timer.SECOND * 5, this.resetCooldown, this);
 			}
 		}else{
-			
+			if(this.scrolling == true && this.cooldown == false){
+				if(this.x < 990){
+					this.x += 20;
+					this.wave_one.x -= 10;
+					this.wave_one.y += 10;
+					this.wave_one.body.setSize(100,-this.x);
+					game.debug.body(this.wave_one);
+				}else{
+					this.wave_one.destroy();
+					this.scrolling = false;
+				}
+			}
+			//Wave 2
+			if(this.x > 445 && this.y < 990){
+				this.y += 20;
+				this.wave_two.x -= 10;
+				this.wave_two.y += 10;
+				this.wave_two.body.setSize(100,-this.y);
+				game.debug.body(this.wave_two);
+			}
+			if(this.y > 990){
+				this.wave_two.destroy();
+			}
+			//Wave 3
+			if(this.y > 445 && this.z < 990){
+				this.z += 20;
+				this.wave_three.x -= 10;
+				this.wave_three.y += 10;
+				this.wave_three.body.setSize(100,-this.z);
+				game.debug.body(this.wave_three);
+			}
+			if(this.z > 990){
+				this.wave_three.destroy();
+				this.cooldown = true;
+				game.time.events.add(Phaser.Timer.SECOND * 5, this.resetCooldown, this);
+			}
 		}
 	},
 	//Resets Special Cooldown
