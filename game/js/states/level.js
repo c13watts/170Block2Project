@@ -45,7 +45,8 @@ level.prototype = {
 
 	update: function() {
 		this.player1.movement(this.cursors,pad1);
-		this.player1.attack(game,this.dummy);
+		this.player1.attack(game,this.dummy,pad1);
+		this.player1.special(game,this.dummy,pad1);
 
 		this.player2.movement(this.wasd,pad2);
 		this.player2.attack(game, this.wasd, pad2);
