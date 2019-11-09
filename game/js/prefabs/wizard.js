@@ -16,6 +16,7 @@ function wizard(){
 	this.wave_one;
 	this.wave_two;
 	this.wave_three;
+	this.wave_speed;
 }
 
 wizard.prototype = {
@@ -159,11 +160,13 @@ wizard.prototype = {
 				this.wave_two = game.add.sprite(this.sprite.x + 130,this.sprite.y + 40,null);
 				this.wave_three = game.add.sprite(this.sprite.x + 130,this.sprite.y + 40,null);
 				this.special_direction = 'right';
+				this.wave_speed = 10;
 			}else{
 				this.wave_one = game.add.sprite(this.sprite.x,this.sprite.y + 40,null);
 				this.wave_two = game.add.sprite(this.sprite.x,this.sprite.y + 40,null);
 				this.wave_three = game.add.sprite(this.sprite.x,this.sprite.y + 40,null);
 				this.special_direction = 'left';
+				this.wave_speed = -10;
 			}
 			this.scrolling = true;
 			game.physics.arcade.enable(this.wave_one);
@@ -174,11 +177,10 @@ wizard.prototype = {
 			this.wave_three.body.setSize(100,100);
 		}
 		//Scroll beam to the right
-		if(this.special_direction == 'right'){
 			if(this.scrolling == true && this.cooldown == false){
 				if(this.x < 990){
 					this.x += 20;
-					this.wave_one.x += 10;
+					this.wave_one.x += this.wave_speed;
 					this.wave_one.y += 10;
 					this.wave_one.body.setSize(100,-this.x);
 					game.debug.body(this.wave_one);
@@ -190,7 +192,7 @@ wizard.prototype = {
 			//Wave 2
 			if(this.x > 445 && this.y < 990){
 				this.y += 20;
-				this.wave_two.x += 10;
+				this.wave_two.x += this.wave_speed;
 				this.wave_two.y += 10;
 				this.wave_two.body.setSize(100,-this.y);
 				game.debug.body(this.wave_two);
@@ -201,54 +203,17 @@ wizard.prototype = {
 			//Wave 3
 			if(this.y > 445 && this.z < 990){
 				this.z += 20;
-				this.wave_three.x += 10;
+				this.wave_three.x += this.wave_speed;
 				this.wave_three.y += 10;
 				this.wave_three.body.setSize(100,-this.z);
 				game.debug.body(this.wave_three);
 			}
 			if(this.z > 990){
 				this.wave_three.destroy();
-				this.cooldown = true;
-				game.time.events.add(Phaser.Timer.SECOND * 5, this.resetCooldown, this);
+				//this.cooldown = true;
+				//game.time.events.add(Phaser.Timer.SECOND * 5, this.resetCooldown, this);
 			}
-		}else{
-			if(this.scrolling == true && this.cooldown == false){
-				if(this.x < 990){
-					this.x += 20;
-					this.wave_one.x -= 10;
-					this.wave_one.y += 10;
-					this.wave_one.body.setSize(100,-this.x);
-					game.debug.body(this.wave_one);
-				}else{
-					this.wave_one.destroy();
-					this.scrolling = false;
-				}
-			}
-			//Wave 2
-			if(this.x > 445 && this.y < 990){
-				this.y += 20;
-				this.wave_two.x -= 10;
-				this.wave_two.y += 10;
-				this.wave_two.body.setSize(100,-this.y);
-				game.debug.body(this.wave_two);
-			}
-			if(this.y > 990){
-				this.wave_two.destroy();
-			}
-			//Wave 3
-			if(this.y > 445 && this.z < 990){
-				this.z += 20;
-				this.wave_three.x -= 10;
-				this.wave_three.y += 10;
-				this.wave_three.body.setSize(100,-this.z);
-				game.debug.body(this.wave_three);
-			}
-			if(this.z > 990){
-				this.wave_three.destroy();
-				this.cooldown = true;
-				game.time.events.add(Phaser.Timer.SECOND * 5, this.resetCooldown, this);
-			}
-		}
+		
 	},
 	//Resets Special Cooldown
 	resetCooldown: function() {
