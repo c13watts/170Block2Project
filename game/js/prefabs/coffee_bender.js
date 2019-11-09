@@ -72,7 +72,11 @@ coffee_bender.prototype = {
 		if (wasd.k.justPressed() || pad1.justPressed(Phaser.Gamepad.XBOX360_Y)) {
 			if (!this.cooldown) {
 				this.cooldown = true;
-				this.coffee.create(this.sprite.x, this.sprite.y, "coffee");
+				if(this.dir == 'right'){
+					this.coffee.create(this.sprite.x+150, this.sprite.y, "coffee");
+				}else{
+					this.coffee.create(this.sprite.x-150, this.sprite.y, "coffee");
+				}
 				game.time.events.add(Phaser.Timer.SECOND * 60, this.resetCooldown, this);
 			}
 		}

@@ -9,7 +9,12 @@ function wizard(){
 	this.scrolling = false;
 	this.special_direction = 'right';
 	this.cooldown = false;
+	this.coffee_buff = false;
 	this.x = 0;
+	this.wave_attack = false;
+	this.wave_one;
+	this.wave_two;
+	this.wave_three;
 }
 
 wizard.prototype = {
@@ -139,6 +144,39 @@ wizard.prototype = {
 				game.time.events.add(Phaser.Timer.SECOND * 5, this.resetCooldown, this);
 				console.log('Player 1 Special on cooldown');
 			}
+		}
+	},
+	//Checks team attack direction for waves. Cannot include wave method here
+	//as buff can end mid-channel and cause problems
+	team_attack: function(game,pad){
+		//Checks for button input
+		if (game.input.keyboard.justPressed(Phaser.Keyboard.X) || pad.justPressed(Phaser.Gamepad.XBOX360_Y)){
+			if(this.special_direction == 'right'){
+				this.wave_one = game.add.sprite(this.sprite.x + 130,this.sprite.y + 40,null);
+				this.wave_two = game.add.sprite(this.sprite.x + 130,this.sprite.y + 40,null);
+				this.wave_three = game.add.sprite(this.sprite.x + 130,this.sprite.y + 40,null);
+			}else{
+				this.wave_one = game.add.sprite(this.sprite.x,this.sprite.y + 40,null);
+				this.wave_two = game.add.sprite(this.sprite.x,this.sprite.y + 40,null);
+				this.wave_three = game.add.sprite(this.sprite.x,this.sprite.y + 40,null);
+			}
+			game.physics.arcade.enable(this.wave_one);
+			game.physics.arcade.enable(this.wave_two);
+			game.physics.arcade.enable(this.wave_three);
+			this.wave_one.body.setSize(100,100);
+			this.wave_two.body.setSize(100,100);
+			this.wave_three.body.setSize(100,100);
+			this.wave_attack = true;
+			game.debug.body(this.wave_one);
+		}
+	},
+	//Actual Wave attack from the special
+	waveAttack: function(game,w1,w2,w3){
+		//Check which direction to send waves
+		if(this.special_direction == 'right'){
+			this.w1.x += 1;
+		}else{
+			
 		}
 	},
 	//Resets Special Cooldown
