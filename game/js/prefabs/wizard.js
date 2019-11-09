@@ -17,6 +17,7 @@ function wizard(){
 	this.wave_two;
 	this.wave_three;
 	this.wave_speed;
+	this.channeling = false;
 }
 
 wizard.prototype = {
@@ -151,7 +152,8 @@ wizard.prototype = {
 	//Team Attack
 	team_attack: function(game,pad){
 		//Checks for button input
-		if (game.input.keyboard.justPressed(Phaser.Keyboard.X) || pad.justPressed(Phaser.Gamepad.XBOX360_Y)){
+		if ((game.input.keyboard.justPressed(Phaser.Keyboard.X) || pad.justPressed(Phaser.Gamepad.XBOX360_Y)) && this.coffee_buff == true){
+			this.channeling = true;
 			this.x = 0;
 			this.y = 0;
 			this.z = 0;
@@ -197,7 +199,7 @@ wizard.prototype = {
 				this.wave_two.body.setSize(100,-this.y);
 				game.debug.body(this.wave_two);
 			}
-			if(this.y > 990){
+			if(this.y >= 990){
 				this.wave_two.destroy();
 			}
 			//Wave 3
@@ -208,16 +210,15 @@ wizard.prototype = {
 				this.wave_three.body.setSize(100,-this.z);
 				game.debug.body(this.wave_three);
 			}
-			if(this.z > 990){
+			if(this.z >= 990){
 				this.wave_three.destroy();
-				//this.cooldown = true;
-				//game.time.events.add(Phaser.Timer.SECOND * 5, this.resetCooldown, this);
+				this.cooldown = true;
+				game.time.events.add(Phaser.Timer.SECOND * 5, this.resetCooldown, this);
+				this.channeling = false;
 			}
-		
 	},
 	//Resets Special Cooldown
 	resetCooldown: function() {
 		this.cooldown = false;
-		console.log('Player 1 Special Ready');
 	}
 }
