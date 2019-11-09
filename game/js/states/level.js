@@ -49,11 +49,10 @@ level.prototype = {
 		//Enable and check for player movement, attack, and specials
 		this.player1.movement(this.cursors,pad1);
 		this.player1.attack(game,this.dummy,pad1);
-		//Check for normal or team special
-		if(this.player1.coffee_buff == false){
-			this.player1.special(game,this.dummy,pad1);
-		}else{
+		if(this.player1.coffee_buff == true || this.player1.channeling == true){
 			this.player1.team_attack(game,pad1);
+		}else if(this.player1.coffee_buff == false){
+			this.player1.special(game,this.dummy,pad1);
 		}
 		
 		//Enable and check for player 2 movement, attack, and special
