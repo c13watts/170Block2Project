@@ -60,21 +60,15 @@ coffee_bender.prototype = {
 	//Basic attack
 	attack: function(game, wasd, pad1) {
 		if (wasd.j.justPressed() || pad1.justPressed(Phaser.Gamepad.XBOX360_X)) {
-			this.sprite.frame = game.rnd.integerInRange(1,4);
-			if (!this.mCooldown) {
-				this.mCooldown = true;
-				if (this.dir == "right") {
-					this.melee.revive();
-					game.time.events.add(Phaser.Timer.HALF, this.endMelee, this);
-				} else {
-					this.melee.revive();
-					game.time.events.add(Phaser.Timer.HALF, this.endMelee, this);
-				}
-				game.time.events.add(Phaser.Timer.SECOND, this.resetmCooldown, this);
+			this.sprite.frame = (game.rnd.integerInRange(1,2) == 1) ? 1 : 3;
+			if (this.dir == "right") {
+				this.melee.revive();
+				game.time.events.add(Phaser.Timer.HALF, this.endMelee, this);
+			} else {
+				this.melee.revive();
+				game.time.events.add(Phaser.Timer.HALF, this.endMelee, this);
 			}
 			game.physics.arcade.enable(this.melee);
-			this.melee.body.setSize(100,100);
-			this.melee.anchor.setTo(0.5);
 			game.debug.body(this.melee);
 		}
 		// drop a cup of coffee (special) 
@@ -82,6 +76,7 @@ coffee_bender.prototype = {
 		if (wasd.k.justPressed() || pad1.justPressed(Phaser.Gamepad.XBOX360_Y)) {
 			if (!this.cooldown) {
 				this.cooldown = true;
+				this.sprite.frame = 2;
 				if(this.dir == 'right'){
 					this.coffee.create(this.sprite.x+50, this.sprite.y, "coffee");
 				} else {
@@ -94,11 +89,6 @@ coffee_bender.prototype = {
 
 	endMelee: function() {
 		this.melee.kill();
-		this.sprite.frame = 0;
-	},
-
-	resetCooldown: function() {
-		this.cooldown = false;
 	},
 
 	resetmCooldown: function() {
