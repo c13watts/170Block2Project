@@ -8,6 +8,7 @@ function coffee_bender() {
 	this.melee;
 	this.coffee;
 	this.cooldown = false;
+	this.mCooldown = false;
 }
 
 coffee_bender.prototype = {
@@ -15,13 +16,13 @@ coffee_bender.prototype = {
 	spawn: function(game,x,y,spritesheet) {
 		this.sprite = game.add.sprite(x,y,spritesheet);
 		game.physics.arcade.enable(this.sprite);
-		this.sprite.anchor.setTo(0.5);
+		this.sprite.anchor.setTo(0.5, 0.5);
 		this.sprite.body.collideWorldBounds = true;
 
-		this.melee = game.add.sprite(0, 0, null);
+		this.melee = game.add.sprite(0, 0, "1");
 		game.physics.arcade.enable(this.melee);
 		this.melee.body.setSize(100,100);
-		this.melee.anchor.setTo(0.5);
+		this.melee.anchor.setTo(0.5, 0.5);
 		this.melee.kill();
 
 		this.coffee = game.add.group();
@@ -38,29 +39,38 @@ coffee_bender.prototype = {
 
 		if (wasd.a.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1) {
 			this.sprite.x -= this.movementSpeed;
-			if (this.dir != "left")
+			this.melee.x = this.sprite.x - 100;
+			this.melee.y = this.sprite.y;
+			if (this.dir != "left") {
 				this.dir = "left";
-			this.sprite.frame = 1;
+				this.sprite.scale.x = -1;
+				this.sprite.frame = 0;
+			}
 		} else if (wasd.d.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT) || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) > 0.1) {
 			this.sprite.x += this.movementSpeed;
-			this.sprite.frame = 0;
-			if (this.dir != "right")
+			this.melee.x = this.sprite.x + 45;
+			this.melee.y = this.sprite.y;
+			if (this.dir != "right"){
 				this.dir = "right";
+				this.sprite.scale.x = 1;
+				this.sprite.frame = 0;
+			}
 		}
 	},
 	//Basic attack
 	attack: function(game, wasd, pad1) {
 		if (wasd.j.justPressed() || pad1.justPressed(Phaser.Gamepad.XBOX360_X)) {
-			if (this.dir == "right") {
-				this.melee.x = this.sprite.x + 45;
-				this.melee.y = this.sprite.y;
-				this.melee.revive();
-				game.time.events.add(Phaser.Timer.HALF * 0.2, this.endMelee, this);
-			} else {
-				this.melee.x = this.sprite.x - 45;
-				this.melee.y = this.sprite.y;
-				this.melee.revive();
-				game.time.events.add(Phaser.Timer.HALF * 0.2, this.endMelee, this);
+			this.sprite.frame = game.rnd.integerInRange(1,4);
+			if (!this.mCooldown) {
+				this.mCooldown = true;
+				if (this.dir == "right") {
+					this.melee.revive();
+					game.time.events.add(Phaser.Timer.HALF, this.endMelee, this);
+				} else {
+					this.melee.revive();
+					game.time.events.add(Phaser.Timer.HALF, this.endMelee, this);
+				}
+				game.time.events.add(Phaser.Timer.SECOND, this.resetmCooldown, this);
 			}
 			game.physics.arcade.enable(this.melee);
 			this.melee.body.setSize(100,100);
@@ -73,9 +83,9 @@ coffee_bender.prototype = {
 			if (!this.cooldown) {
 				this.cooldown = true;
 				if(this.dir == 'right'){
-					this.coffee.create(this.sprite.x+150, this.sprite.y, "coffee");
-				}else{
-					this.coffee.create(this.sprite.x-150, this.sprite.y, "coffee");
+					this.coffee.create(this.sprite.x+50, this.sprite.y, "coffee");
+				} else {
+					this.coffee.create(this.sprite.x-50, this.sprite.y, "coffee");
 				}
 				game.time.events.add(Phaser.Timer.SECOND * 60, this.resetCooldown, this);
 			}
@@ -84,9 +94,14 @@ coffee_bender.prototype = {
 
 	endMelee: function() {
 		this.melee.kill();
+		this.sprite.frame = 0;
 	},
 
 	resetCooldown: function() {
 		this.cooldown = false;
+	},
+
+	resetmCooldown: function() {
+		this.mCooldown = false;
 	}
 }
