@@ -5,6 +5,7 @@
 function enemy(){
 	this.sprite;
 	this.movementspeed = 1;
+	this.direction = 'left';
 }
 
 enemy.prototype = {
@@ -18,13 +19,21 @@ enemy.prototype = {
 		//Only really works for one player atm. Needs to be improved for 2 players
 		if(player.x > this.sprite.x){
 			this.sprite.x += this.movementspeed;
+			this.direction = 'right';
 		}else if (player.x < this.sprite.x){
 			this.sprite.x -= this.movementspeed;
+			this.direction = 'left';
 		}
 		if(player.y > this.sprite.y){
 			this.sprite.y += this.movementspeed;
 		}else if (player.y < this.sprite.y){
 			this.sprite.y -= this.movementspeed;
+		}
+		
+		if(this.direction == 'left'){
+			this.sprite.frame = 0;
+		}else{
+			this.sprite.frame = 1;
 		}
 	}
 }

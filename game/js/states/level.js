@@ -11,6 +11,7 @@ level.prototype = {
 		//Preload assets
 		game.load.spritesheet('player', 'assets/img/player.png',170, 170);
 		game.load.spritesheet('Kalua', 'assets/img/KaluaSprites.png',128, 128);
+		game.load.spritesheet('enemy', 'assets/img/CorporateDog.png',128, 128);
 
 		game.input.keyboard.addKeyCapture([Phaser.Keyboard.W, Phaser.Keyboard.A, Phaser.Keyboard.S, Phaser.Keyboard.D, Phaser.Keyboard.J]);
 	},
@@ -28,7 +29,7 @@ level.prototype = {
 
 		//Dummy enemy
 		this.dummy = new enemy();
-		this.dummy.spawn(game,960,540,'player')
+		this.dummy.spawn(game,960,540,'enemy')
 		
 		//Enable controls
 		this.cursors = game.input.keyboard.createCursorKeys();
@@ -72,7 +73,6 @@ level.prototype = {
 		}
 		
 		//Dummy pathfinding **For debugging and testing
-		game.debug.body(this.dummy.sprite);
 		this.dummy.pathfind(this.player1.sprite);
 
 		game.debug.body(this.player2.sprite);
