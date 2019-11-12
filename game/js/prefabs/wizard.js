@@ -10,6 +10,7 @@ function wizard(){
 	this.special_direction = 'right';
 	this.cooldown = false;
 	this.coffee_buff = false;
+	this.x0 = 0;
 	this.x = 0;
 	this.y = 0;
 	this.z = 0;
@@ -103,7 +104,6 @@ wizard.prototype = {
 			
 			//Kamehameha style (Scrolling)
 			//Check Direction player is facing
-			this.x = 0;
 			if(this.cooldown == false && this.scrolling == false){
 				if(this.direction == 'right'){
 					this.special_hitbox = game.add.sprite(this.sprite.x + 130,this.sprite.y + 40,null);
@@ -120,32 +120,32 @@ wizard.prototype = {
 		}
 		//Scroll beam to the right
 		if(this.scrolling == true && this.cooldown == false && this.special_direction == 'right'){
-			if( this.x < 1980){
-				this.x += 30;
-				this.special_hitbox.body.setSize(this.x,100);
+			if( this.x0 < 1980){
+				this.x0 += 30;
+				this.special_hitbox.body.setSize(this.x0,100);
 				game.debug.body(this.special_hitbox);
 			}else{
-				this.x = 0;
+				this.x0 = 0;
 				this.scrolling = false;
 				this.cooldown = true;
 				this.special_hitbox.destroy();
-				game.time.events.add(Phaser.Timer.SECOND * 5, this.resetCooldown, this);
+				game.time.events.add(Phaser.Timer.SECOND * 1, this.resetCooldown, this);
 				console.log('Player 1 Special on cooldown');
 			}
 		}
 		//Scroll beam to the left
 		if(this.scrolling == true && this.cooldown == false && this.special_direction == 'left'){
-			if( this.x < 1980){
-				this.x += 30;
+			if( this.x0 < 1980){
+				this.x0 += 30;
 				this.special_hitbox.x -= 30;
-				this.special_hitbox.body.setSize(this.x,100);
+				this.special_hitbox.body.setSize(this.x0,100);
 				game.debug.body(this.special_hitbox);
 			}else{
-				this.x = 0;
+				this.x0 = 0;
 				this.scrolling = false;
 				this.cooldown = true;
 				this.special_hitbox.destroy();
-				game.time.events.add(Phaser.Timer.SECOND * 15, this.resetCooldown, this);
+				game.time.events.add(Phaser.Timer.SECOND * 1, this.resetCooldown, this);
 				console.log('Player 1 Special on cooldown');
 			}
 		}
@@ -214,7 +214,7 @@ wizard.prototype = {
 			if(this.z >= 990){
 				this.wave_three.destroy();
 				this.cooldown = true;
-				game.time.events.add(Phaser.Timer.SECOND * 15, this.resetCooldown, this);
+				game.time.events.add(Phaser.Timer.SECOND * 1, this.resetCooldown, this);
 				this.channeling = false;
 			}
 	},
