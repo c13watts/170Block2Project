@@ -59,6 +59,18 @@ level.prototype = {
 		this.player2.movement(this.wasd,pad2);
 		this.player2.attack(game, this.wasd, pad2);
 		
+		//Handles Coffee Buffing
+		if(game.physics.arcade.overlap(this.player1.sprite,this.player2.coffee)){
+			this.player2.coffee.destroy();
+			this.player2.coffee_placed = false;
+			this.player1.enable_coffee_buff(game);
+		}
+		if(game.physics.arcade.overlap(this.player2.sprite,this.player2.coffee)){
+			this.player2.coffee.destroy();
+			this.player2.coffee_placed = false;
+			this.player2.enable_coffee_buff(game);
+		}
+		
 		//Dummy pathfinding **For debugging and testing
 		game.debug.body(this.dummy.sprite);
 		this.dummy.pathfind(this.player1.sprite);

@@ -3,10 +3,12 @@
 "use strict"
 function coffee_bender() {
 	this.sprite;
+	this.attack_power = 1;
 	this.movementSpeed = 7;
 	this.dir = "right";
 	this.melee;
 	this.coffee;
+	this.coffee_placed = false;
 	this.cooldown = false;
 	this.mCooldown = false;
 }
@@ -78,11 +80,14 @@ coffee_bender.prototype = {
 				this.cooldown = true;
 				this.sprite.frame = 2;
 				if(this.dir == 'right'){
-					this.coffee.create(this.sprite.x+50, this.sprite.y, "coffee");
+					this.coffee = game.add.sprite(this.sprite.x+70, this.sprite.y, "coffee");
 				} else {
-					this.coffee.create(this.sprite.x-50, this.sprite.y, "coffee");
+					this.coffee = game.add.sprite(this.sprite.x-100, this.sprite.y, "coffee");
 				}
-				game.time.events.add(Phaser.Timer.SECOND * 60, this.resetCooldown, this);
+				this.coffee_placed = true;
+				game.physics.arcade.enable(this.coffee);
+				game.time.events.add(Phaser.Timer.SECOND * 30, this.resetCooldown, this);
+				game.time.events.add(Phaser.Timer.SECOND * 15, this.destroyCoffee, this);
 			}
 		}
 	},
@@ -90,8 +95,28 @@ coffee_bender.prototype = {
 	endMelee: function() {
 		this.melee.kill();
 	},
-
+	resetCooldown: function() {
+		this.cooldown = false;
+	},
 	resetmCooldown: function() {
 		this.mCooldown = false;
+	},
+	destroyCoffee: function(){
+		if(this.coffee_placed == true){
+			this.coffee.destroy();
+		}
+	},
+	//Enable Coffee Buff
+	enable_coffee_buff: function(game){
+		this.coffee_buff = true;
+		this.attack_power = 2;
+		this.movementSpeed = 14;
+		game.time.events.add(Phaser.Timer.SECOND * 15, this.end_coffee_buff, this);
+	},
+	//Ends Coffee Buff
+	end_coffee_buff: function(){
+		this.coffee_buff = false;
+		this.attack_power = 1;
+		this.movementSpeed = 7;
 	}
 }

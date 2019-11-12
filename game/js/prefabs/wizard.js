@@ -1,7 +1,7 @@
 "use strict"
 function wizard(){
 	this.sprite;
-	this.attack_power;
+	this.attack_power = 1;
 	this.movementspeed = 7;
 	this.direction = 'right';
 	this.attack_hitbox;
@@ -103,6 +103,7 @@ wizard.prototype = {
 			
 			//Kamehameha style (Scrolling)
 			//Check Direction player is facing
+			this.x = 0;
 			if(this.cooldown == false && this.scrolling == false){
 				if(this.direction == 'right'){
 					this.special_hitbox = game.add.sprite(this.sprite.x + 130,this.sprite.y + 40,null);
@@ -120,7 +121,7 @@ wizard.prototype = {
 		//Scroll beam to the right
 		if(this.scrolling == true && this.cooldown == false && this.special_direction == 'right'){
 			if( this.x < 1980){
-				this.x += 20;
+				this.x += 30;
 				this.special_hitbox.body.setSize(this.x,100);
 				game.debug.body(this.special_hitbox);
 			}else{
@@ -135,8 +136,8 @@ wizard.prototype = {
 		//Scroll beam to the left
 		if(this.scrolling == true && this.cooldown == false && this.special_direction == 'left'){
 			if( this.x < 1980){
-				this.x += 20;
-				this.special_hitbox.x -= 20;
+				this.x += 30;
+				this.special_hitbox.x -= 30;
 				this.special_hitbox.body.setSize(this.x,100);
 				game.debug.body(this.special_hitbox);
 			}else{
@@ -144,7 +145,7 @@ wizard.prototype = {
 				this.scrolling = false;
 				this.cooldown = true;
 				this.special_hitbox.destroy();
-				game.time.events.add(Phaser.Timer.SECOND * 5, this.resetCooldown, this);
+				game.time.events.add(Phaser.Timer.SECOND * 15, this.resetCooldown, this);
 				console.log('Player 1 Special on cooldown');
 			}
 		}
@@ -213,12 +214,26 @@ wizard.prototype = {
 			if(this.z >= 990){
 				this.wave_three.destroy();
 				this.cooldown = true;
-				game.time.events.add(Phaser.Timer.SECOND * 5, this.resetCooldown, this);
+				game.time.events.add(Phaser.Timer.SECOND * 15, this.resetCooldown, this);
 				this.channeling = false;
 			}
 	},
 	//Resets Special Cooldown
 	resetCooldown: function() {
 		this.cooldown = false;
+	},
+	//Enable Coffee Buff
+	enable_coffee_buff: function(game){
+		this.coffee_buff = true;
+		this.attack_power = 2;
+		this.movementspeed = 14;
+		game.time.events.add(Phaser.Timer.SECOND * 15, this.end_coffee_buff, this);
+		console.log('t');
+	},
+	//Ends Coffee Buff
+	end_coffee_buff: function(){
+		this.coffee_buff = false;
+		this.attack_power = 1;
+		this.movementspeed = 7;
 	}
 }
