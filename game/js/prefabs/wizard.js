@@ -20,6 +20,7 @@ function wizard(){
 	this.wave_speed;
 	this.channeling = false;
 	this.can_move = true;
+	this.check = true;
 }
 
 wizard.prototype = {
@@ -82,7 +83,8 @@ wizard.prototype = {
 	//Special Move
 	special: function(game,enemy,pad){
 		//Checks for button input
-		if (game.input.keyboard.justPressed(Phaser.Keyboard.X) || pad.justPressed(Phaser.Gamepad.XBOX360_Y)){
+		if ((game.input.keyboard.justPressed(Phaser.Keyboard.X) || pad.justPressed(Phaser.Gamepad.XBOX360_Y)) && this.check == true && this.cooldown == false){
+			this.check = false;
 			//Instant Beam
 			/*if (this.cooldown == false) {
 				this.cooldown = true;
@@ -133,8 +135,9 @@ wizard.prototype = {
 				this.scrolling = false;
 				this.cooldown = true;
 				this.special_hitbox.destroy();
-				game.time.events.add(Phaser.Timer.SECOND * 15, this.resetCooldown, this);
+				game.time.events.add(Phaser.Timer.SECOND * 1, this.resetCooldown, this);
 				this.can_move = true;
+				this.check = true;
 				console.log('Player 1 Special on cooldown');
 			}
 		}
@@ -150,8 +153,9 @@ wizard.prototype = {
 				this.scrolling = false;
 				this.cooldown = true;
 				this.special_hitbox.destroy();
-				game.time.events.add(Phaser.Timer.SECOND * 15, this.resetCooldown, this);
+				game.time.events.add(Phaser.Timer.SECOND * 1, this.resetCooldown, this);
 				this.can_move = true;
+				this.check = true;
 				console.log('Player 1 Special on cooldown');
 			}
 		}
@@ -159,9 +163,10 @@ wizard.prototype = {
 	//Team Attack
 	team_attack: function(game,pad){
 		//Checks for button input
-		if ((game.input.keyboard.justPressed(Phaser.Keyboard.X) || pad.justPressed(Phaser.Gamepad.XBOX360_Y)) && this.coffee_buff == true && this.cooldown == false){
+		if ((game.input.keyboard.justPressed(Phaser.Keyboard.X) || pad.justPressed(Phaser.Gamepad.XBOX360_Y)) && this.coffee_buff == true && this.cooldown == false && this.check == true){
 			this.can_move = false;
 			this.channeling = true;
+			this.check = false;
 			this.x = 0;
 			this.y = 0;
 			this.z = 0;
@@ -224,6 +229,7 @@ wizard.prototype = {
 				game.time.events.add(Phaser.Timer.SECOND * 15, this.resetCooldown, this);
 				this.channeling = false;
 				this.can_move = true;
+				this.check = true;
 			}
 	},
 	//Resets Special Cooldown
