@@ -19,6 +19,7 @@ function wizard(){
 	this.wave_three;
 	this.wave_speed;
 	this.channeling = false;
+	this.can_move = true;
 }
 
 wizard.prototype = {
@@ -59,6 +60,7 @@ wizard.prototype = {
 	attack: function(game,enemy,pad){
 		//Checks for button input
 		if (game.input.keyboard.justPressed(Phaser.Keyboard.Z) || pad.justPressed(Phaser.Gamepad.XBOX360_X)){
+			this.can_move = false;
 			//Checks if player is facing right or left and places hitbox accordingly
 			if(this.direction == 'right'){
 				this.attack_hitbox = game.add.sprite(this.sprite.x + 130,this.sprite.y + 40,null);
@@ -74,6 +76,7 @@ wizard.prototype = {
 			game.debug.body(this.attack_hitbox);
 			//Destroy hitbox
 			this.attack_hitbox.destroy();
+			this.can_move = true;
 		}
 	},
 	//Special Move
@@ -105,6 +108,7 @@ wizard.prototype = {
 			//Kamehameha style (Scrolling)
 			//Check Direction player is facing
 			if(this.cooldown == false && this.scrolling == false){
+				this.can_move = false;
 				if(this.direction == 'right'){
 					this.special_hitbox = game.add.sprite(this.sprite.x + 130,this.sprite.y + 40,null);
 					this.special_direction = 'right';
@@ -129,7 +133,8 @@ wizard.prototype = {
 				this.scrolling = false;
 				this.cooldown = true;
 				this.special_hitbox.destroy();
-				game.time.events.add(Phaser.Timer.SECOND * 1, this.resetCooldown, this);
+				game.time.events.add(Phaser.Timer.SECOND * 15, this.resetCooldown, this);
+				this.can_move = true;
 				console.log('Player 1 Special on cooldown');
 			}
 		}
@@ -145,7 +150,8 @@ wizard.prototype = {
 				this.scrolling = false;
 				this.cooldown = true;
 				this.special_hitbox.destroy();
-				game.time.events.add(Phaser.Timer.SECOND * 1, this.resetCooldown, this);
+				game.time.events.add(Phaser.Timer.SECOND * 15, this.resetCooldown, this);
+				this.can_move = true;
 				console.log('Player 1 Special on cooldown');
 			}
 		}
@@ -153,7 +159,8 @@ wizard.prototype = {
 	//Team Attack
 	team_attack: function(game,pad){
 		//Checks for button input
-		if ((game.input.keyboard.justPressed(Phaser.Keyboard.X) || pad.justPressed(Phaser.Gamepad.XBOX360_Y)) && this.coffee_buff == true){
+		if ((game.input.keyboard.justPressed(Phaser.Keyboard.X) || pad.justPressed(Phaser.Gamepad.XBOX360_Y)) && this.coffee_buff == true && this.cooldown == false){
+			this.can_move = false;
 			this.channeling = true;
 			this.x = 0;
 			this.y = 0;
@@ -179,7 +186,7 @@ wizard.prototype = {
 			this.wave_two.body.setSize(100,100);
 			this.wave_three.body.setSize(100,100);
 		}
-		//Scroll beam to the right
+		//Scroll beam
 			if(this.scrolling == true && this.cooldown == false){
 				if(this.x < 990){
 					this.x += 20;
@@ -214,13 +221,15 @@ wizard.prototype = {
 			if(this.z >= 990){
 				this.wave_three.destroy();
 				this.cooldown = true;
-				game.time.events.add(Phaser.Timer.SECOND * 1, this.resetCooldown, this);
+				game.time.events.add(Phaser.Timer.SECOND * 15, this.resetCooldown, this);
 				this.channeling = false;
+				this.can_move = true;
 			}
 	},
 	//Resets Special Cooldown
 	resetCooldown: function() {
 		this.cooldown = false;
+		console.log('Player 1 Special Ready');
 	},
 	//Enable Coffee Buff
 	enable_coffee_buff: function(game){
@@ -228,7 +237,6 @@ wizard.prototype = {
 		this.attack_power = 2;
 		this.movementspeed = 14;
 		game.time.events.add(Phaser.Timer.SECOND * 15, this.end_coffee_buff, this);
-		console.log('t');
 	},
 	//Ends Coffee Buff
 	end_coffee_buff: function(){
