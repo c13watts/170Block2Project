@@ -27,6 +27,11 @@ wizard.prototype = {
 	//Spawn function
 	spawn: function(game,x,y,spritesheet){
 		this.sprite = game.add.sprite(x,y,spritesheet);
+		this.sprite.scale.setTo(.5,.5);
+		this.sprite.animations.add('leftrun', [2], 1, true);
+		this.sprite.animations.add('rightrun', [1], 1, true);
+		this.sprite.animations.add('leftidle', [3], 1, true);
+		this.sprite.animations.add('rightidle', [0], 1, true);
 		game.physics.arcade.enable(this.sprite);
 		this.sprite.body.collideWorldBounds = true;
 	},
@@ -37,25 +42,44 @@ wizard.prototype = {
 			//Move to the left
 			this.sprite.x += -this.movementspeed;
 			this.direction = 'left';
-			this.sprite.frame = 1;
+			this.sprite.animations.play('leftrun');
 		}
 		//Check if input is right
 		else if (cursors.right.isDown || pad.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) > 0.1){
 			//Move to the right
 			this.sprite.x += this.movementspeed;
 			this.direction = 'right';
-			this.sprite.frame = 0;
+			this.sprite.animations.play('rightrun');
 		}
 		//Check if input is up
 		if (cursors.up.isDown || pad.isDown(Phaser.Gamepad.XBOX360_DPAD_UP) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) < -0.1){
 			//Move up
 			this.sprite.y += -this.movementspeed;
+			if(this.direction == 'left'){
+				this.sprite.animations.play('leftrun');
+			}else{
+				this.sprite.animations.play('rightrun');
+			}
 		}
 		//Check if input is down
 		else if (cursors.down.isDown || pad.isDown(Phaser.Gamepad.XBOX360_DPAD_DOWN) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) > 0.1){
 			//Move down
 			this.sprite.y += this.movementspeed;
+			if(this.direction == 'left'){
+				this.sprite.animations.play('leftrun');
+			}else{
+				this.sprite.animations.play('rightrun');
+			}
 		}
+		if(cursors.up.isUp && cursors.down.isUp && cursors.left.isUp && cursors.right.isUp ){
+			if(this.direction == 'left'){
+				this.sprite.animations.play('leftidle');
+			}
+			else{
+				this.sprite.animations.play('rightidle');
+			}
+		}
+		
 	},
 	//Basic attack
 	attack: function(game,enemy,pad){
@@ -135,7 +159,7 @@ wizard.prototype = {
 				this.scrolling = false;
 				this.cooldown = true;
 				this.special_hitbox.destroy();
-				game.time.events.add(Phaser.Timer.SECOND * 1, this.resetCooldown, this);
+				game.time.events.add(Phaser.Timer.SECOND * 15, this.resetCooldown, this);
 				this.can_move = true;
 				this.check = true;
 				console.log('Player 1 Special on cooldown');
@@ -153,7 +177,7 @@ wizard.prototype = {
 				this.scrolling = false;
 				this.cooldown = true;
 				this.special_hitbox.destroy();
-				game.time.events.add(Phaser.Timer.SECOND * 1, this.resetCooldown, this);
+				game.time.events.add(Phaser.Timer.SECOND * 15, this.resetCooldown, this);
 				this.can_move = true;
 				this.check = true;
 				console.log('Player 1 Special on cooldown');

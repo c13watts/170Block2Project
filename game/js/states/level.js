@@ -9,7 +9,7 @@ var level = function(game)
 level.prototype = {
 	preload: function() {
 		//Preload assets
-		game.load.spritesheet('player', 'assets/img/player.png',170, 170);
+		game.load.spritesheet('player', 'assets/img/image0.png',400, 428);
 		game.load.spritesheet('Kalua', 'assets/img/KaluaSprites.png',128, 128);
 		game.load.spritesheet('enemy', 'assets/img/CorporateDog.png',128, 128);
 
