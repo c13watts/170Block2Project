@@ -19,9 +19,10 @@ coffee_bender.prototype = {
 		this.sprite = game.add.sprite(x,y,spritesheet);
 		game.physics.arcade.enable(this.sprite);
 		this.sprite.anchor.setTo(0.5, 0.5);
+		this.sprite.scale.setTo(1.3,1.3);
 		this.sprite.body.collideWorldBounds = true;
 
-		this.melee = game.add.sprite(0, 0, "1");
+		this.melee = game.add.sprite(0, 0, null);
 		game.physics.arcade.enable(this.melee);
 		this.melee.body.setSize(100,100);
 		this.melee.anchor.setTo(0.5, 0.5);
@@ -30,6 +31,13 @@ coffee_bender.prototype = {
 		this.coffee = game.add.group();
 		this.coffee.enableBody = true;
 		this.coffee.physicsBodyType = Phaser.Physics.ARCADE;
+		
+		this.sprite.animations.add('leftattack', [6,7], 15, false);
+		this.sprite.animations.add('rightattack', [1,0], 15, false);
+		this.sprite.animations.add('leftspecial', [5,4,7], 7, false);
+		this.sprite.animations.add('rightspecial', [2,3,0], 7, false);
+		this.sprite.animations.add('leftidle', [7], 1, true);
+		this.sprite.animations.add('rightidle', [0], 1, true);
 	},
 	//Controls (Wizard already uses up, down, left, right)
 	movement: function(wasd, pad1) {
@@ -45,8 +53,7 @@ coffee_bender.prototype = {
 			this.melee.y = this.sprite.y;
 			if (this.dir != "left") {
 				this.dir = "left";
-				this.sprite.scale.x = -1;
-				this.sprite.frame = 0;
+				this.sprite.animations.play('leftidle');
 			}
 		} else if (wasd.d.isDown || pad1.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT) || pad1.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) > 0.1) {
 			this.sprite.x += this.movementSpeed;
@@ -54,24 +61,25 @@ coffee_bender.prototype = {
 			this.melee.y = this.sprite.y;
 			if (this.dir != "right"){
 				this.dir = "right";
-				this.sprite.scale.x = 1;
-				this.sprite.frame = 0;
+				this.sprite.animations.play('rightidle');
 			}
 		}
 	},
 	//Basic attack
 	attack: function(game, wasd, pad1) {
 		if (wasd.j.justPressed() || pad1.justPressed(Phaser.Gamepad.XBOX360_X)) {
-			this.sprite.frame = (game.rnd.integerInRange(1,2) == 1) ? 1 : 3;
+			//this.sprite.frame = (game.rnd.integerInRange(1,2) == 1) ? 1 : 3;
 			if (this.dir == "right") {
+				this.sprite.animations.play('rightattack');
 				this.melee.revive();
 				game.time.events.add(Phaser.Timer.HALF, this.endMelee, this);
 			} else {
+				this.sprite.animations.play('leftattack');
 				this.melee.revive();
 				game.time.events.add(Phaser.Timer.HALF, this.endMelee, this);
 			}
 			game.physics.arcade.enable(this.melee);
-			game.debug.body(this.melee);
+			//game.debug.body(this.melee);
 		}
 		// drop a cup of coffee (special) 
 		// 60s cooldown
@@ -80,9 +88,11 @@ coffee_bender.prototype = {
 				this.cooldown = true;
 				this.sprite.frame = 2;
 				if(this.dir == 'right'){
-					this.coffee = game.add.sprite(this.sprite.x+70, this.sprite.y, "coffee");
+					this.sprite.animations.play('rightspecial');
+					this.coffee = game.add.sprite(this.sprite.x+100, this.sprite.y, "coffee");
 				} else {
-					this.coffee = game.add.sprite(this.sprite.x-100, this.sprite.y, "coffee");
+					this.sprite.animations.play('leftspecial');
+					this.coffee = game.add.sprite(this.sprite.x-120, this.sprite.y, "coffee");
 				}
 				this.coffee_placed = true;
 				game.physics.arcade.enable(this.coffee);

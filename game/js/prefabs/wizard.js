@@ -98,7 +98,7 @@ wizard.prototype = {
 			if(game.physics.arcade.overlap(this.attack_hitbox,enemy.sprite)){
 				console.log('Melee: Hit');
 			}
-			game.debug.body(this.attack_hitbox);
+			//game.debug.body(this.attack_hitbox);
 			//Destroy hitbox
 			this.attack_hitbox.destroy();
 			this.can_move = true;

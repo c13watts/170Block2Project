@@ -76,7 +76,7 @@ level.prototype = {
 		
 		//Dummy pathfinding **For debugging and testing
 		this.dummy.pathfind(this.player1.sprite);
-		game.debug.body(this.player2.sprite);
+		//game.debug.body(this.player2.sprite);
 	},
 
 	shutdown: function() {
