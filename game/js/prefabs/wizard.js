@@ -21,6 +21,8 @@ function wizard(){
 	this.channeling = false;
 	this.can_move = true;
 	this.check = true;
+	this.big;
+	this.bcheck = false;
 }
 
 wizard.prototype = {
@@ -189,7 +191,7 @@ wizard.prototype = {
 		}
 	},
 	//Team Attack
-	team_attack: function(game,pad,enemygroup){
+	team_attack: function(game,pad,enemy){
 		//Checks for button input
 		if ((game.input.keyboard.justPressed(Phaser.Keyboard.X) || pad.justPressed(Phaser.Gamepad.XBOX360_Y)) && this.coffee_buff == true && this.cooldown == false && this.check == true){
 			this.can_move = false;
@@ -256,8 +258,19 @@ wizard.prototype = {
 				this.wave_three.y += 10;
 				this.wave_three.body.setSize(100,-this.z);
 				game.debug.body(this.wave_three);
+				if(this.z > 960 && this.bcheck == false){
+					this.bcheck = true;
+					if(this.special_direction == 'right'){
+						this.big = game.add.sprite(this.sprite.x + 100, this.sprite.y - 400, null);
+					}else{
+						this.big = game.add.sprite(this.sprite.x - 660, this.sprite.y - 400, null);
+					}
+					game.physics.arcade.enable(this.big);
+					this.big.body.setSize(700,800);
+				}
 			}
 			if(this.z >= 990){
+				game.time.events.add(Phaser.Timer.SECOND * .5, this.destroy_big, this);
 				this.wave_three.destroy();
 				this.cooldown = true;
 				game.time.events.add(Phaser.Timer.SECOND * 15, this.resetCooldown, this);
@@ -286,5 +299,8 @@ wizard.prototype = {
 	},
 	destroy_hitbox: function(){
 		this.attack_hitbox.destroy();
+	},
+	destroy_big: function(){
+		this.big.destroy();
 	}
 }

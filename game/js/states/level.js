@@ -99,9 +99,7 @@ level.prototype = {
 		
 		game.physics.arcade.overlap(this.player1.attack_hitbox, this.enemygroup, this.destroy, null, this);
 		game.physics.arcade.overlap(this.player1.special_hitbox, this.enemygroup, this.destroy, null, this);
-		game.physics.arcade.overlap(this.player1.wave_one, this.enemygroup, this.destroy, null, this);
-		game.physics.arcade.overlap(this.player1.wave_two, this.enemygroup, this.destroy, null, this);
-		game.physics.arcade.overlap(this.player1.wave_three, this.enemygroup, this.destroy, null, this);
+		game.physics.arcade.overlap(this.player1.big, this.enemygroup, this.destroy, null, this);
 		game.physics.arcade.overlap(this.player2.melee, this.enemygroup, this.destroy, null, this);
 		
 		//Handles Coffee Buffing
