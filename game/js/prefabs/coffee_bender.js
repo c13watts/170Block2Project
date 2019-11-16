@@ -72,11 +72,11 @@ coffee_bender.prototype = {
 			if (this.dir == "right") {
 				this.sprite.animations.play('rightattack');
 				this.melee.revive();
-				game.time.events.add(Phaser.Timer.HALF, this.endMelee, this);
+				game.time.events.add(Phaser.Timer * 1, this.endMelee, this);
 			} else {
 				this.sprite.animations.play('leftattack');
 				this.melee.revive();
-				game.time.events.add(Phaser.Timer.HALF, this.endMelee, this);
+				game.time.events.add(Phaser.Timer * 1, this.endMelee, this);
 			}
 			game.physics.arcade.enable(this.melee);
 			//game.debug.body(this.melee);

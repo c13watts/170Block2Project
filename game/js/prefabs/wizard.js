@@ -28,10 +28,12 @@ wizard.prototype = {
 	spawn: function(game,x,y,spritesheet){
 		this.sprite = game.add.sprite(x,y,spritesheet);
 		this.sprite.scale.setTo(.5,.5);
-		this.sprite.animations.add('leftrun', [2], 1, true);
+		this.sprite.animations.add('leftrun', [3], 1, true);
 		this.sprite.animations.add('rightrun', [1], 1, true);
-		this.sprite.animations.add('leftidle', [3], 1, true);
+		this.sprite.animations.add('leftidle', [4], 1, true);
 		this.sprite.animations.add('rightidle', [0], 1, true);
+		this.sprite.animations.add('rightspecial', [2], 1, true);
+		this.sprite.animations.add('leftspecial', [5], 1, true);
 		game.physics.arcade.enable(this.sprite);
 		this.sprite.body.collideWorldBounds = true;
 	},
@@ -99,8 +101,8 @@ wizard.prototype = {
 				console.log('Melee: Hit');
 			}
 			//game.debug.body(this.attack_hitbox);
+			game.time.events.add(Phaser.Timer.SECOND * 1, this.destroy_hitbox, this);
 			//Destroy hitbox
-			this.attack_hitbox.destroy();
 			this.can_move = true;
 		}
 	},
@@ -151,6 +153,7 @@ wizard.prototype = {
 		//Scroll beam to the right
 		if(this.scrolling == true && this.cooldown == false && this.special_direction == 'right'){
 			if( this.x0 < 1980){
+				this.sprite.animations.play('rightspecial');
 				this.x0 += 30;
 				this.special_hitbox.body.setSize(this.x0,100);
 				game.debug.body(this.special_hitbox);
@@ -168,6 +171,7 @@ wizard.prototype = {
 		//Scroll beam to the left
 		if(this.scrolling == true && this.cooldown == false && this.special_direction == 'left'){
 			if( this.x0 < 1980){
+				this.sprite.animations.play('leftspecial');
 				this.x0 += 30;
 				this.special_hitbox.x -= 30;
 				this.special_hitbox.body.setSize(this.x0,100);
@@ -185,7 +189,7 @@ wizard.prototype = {
 		}
 	},
 	//Team Attack
-	team_attack: function(game,pad){
+	team_attack: function(game,pad,enemygroup){
 		//Checks for button input
 		if ((game.input.keyboard.justPressed(Phaser.Keyboard.X) || pad.justPressed(Phaser.Gamepad.XBOX360_Y)) && this.coffee_buff == true && this.cooldown == false && this.check == true){
 			this.can_move = false;
@@ -214,6 +218,12 @@ wizard.prototype = {
 			this.wave_one.body.setSize(100,100);
 			this.wave_two.body.setSize(100,100);
 			this.wave_three.body.setSize(100,100);
+		}
+		
+		if(this.special_direction == 'right' && this.can_move == false){
+			this.sprite.animations.play('rightspecial');
+		}else if(this.special_direction == 'left' && this.can_move == false){
+			this.sprite.animations.play('leftspecial');
 		}
 		//Scroll beam
 			if(this.scrolling == true && this.cooldown == false){
@@ -273,5 +283,8 @@ wizard.prototype = {
 		this.coffee_buff = false;
 		this.attack_power = 1;
 		this.movementspeed = 7;
+	},
+	destroy_hitbox: function(){
+		this.attack_hitbox.destroy();
 	}
 }
