@@ -30,12 +30,15 @@ wizard.prototype = {
 	spawn: function(game,x,y,spritesheet){
 		this.sprite = game.add.sprite(x,y,spritesheet);
 		this.sprite.scale.setTo(.5,.5);
-		this.sprite.animations.add('leftrun', [3], 1, true);
+		this.sprite.animations.add('leftrun', [4], 1, true);
 		this.sprite.animations.add('rightrun', [1], 1, true);
-		this.sprite.animations.add('leftidle', [4], 1, true);
+		this.sprite.animations.add('leftidle', [5], 1, true);
 		this.sprite.animations.add('rightidle', [0], 1, true);
 		this.sprite.animations.add('rightspecial', [2], 1, true);
-		this.sprite.animations.add('leftspecial', [5], 1, true);
+		this.sprite.animations.add('leftspecial', [6], 1, true);
+		this.sprite.animations.add('leftattack', [7,5], 1, false);
+		this.sprite.animations.add('rightattack', [3,0], 1, false);
+		
 		game.physics.arcade.enable(this.sprite);
 		this.sprite.body.collideWorldBounds = true;
 	},
@@ -93,8 +96,10 @@ wizard.prototype = {
 			//Checks if player is facing right or left and places hitbox accordingly
 			if(this.direction == 'right'){
 				this.attack_hitbox = game.add.sprite(this.sprite.x + 130,this.sprite.y + 40,null);
+				this.sprite.frame = 3;
 			}else{
 				this.attack_hitbox = game.add.sprite(this.sprite.x - 70,this.sprite.y + 40,null);
+				this.sprite.frame = 7;
 			}
 			//Enable hitbox
 			game.physics.arcade.enable(this.attack_hitbox);
@@ -103,7 +108,7 @@ wizard.prototype = {
 				console.log('Melee: Hit');
 			}
 			//game.debug.body(this.attack_hitbox);
-			game.time.events.add(Phaser.Timer.SECOND * 1, this.destroy_hitbox, this);
+			game.time.events.add(Phaser.Timer.SECOND * .1, this.destroy_hitbox, this);
 			//Destroy hitbox
 			this.can_move = true;
 		}
@@ -298,6 +303,11 @@ wizard.prototype = {
 		this.movementspeed = 7;
 	},
 	destroy_hitbox: function(){
+		if(this.direction == 'right'){
+			this.sprite.frame = 0;
+		}else{
+			this.sprite.frame = 5;
+		}
 		this.attack_hitbox.destroy();
 	},
 	destroy_big: function(){
